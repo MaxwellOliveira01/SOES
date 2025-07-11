@@ -13,7 +13,7 @@ public class Voter {
     [MaxLength(200)]
     public string Email { get; set; }
     
-    public List<Token> Tokens { get; set; }
+    public List<Otp> Otps { get; set; } = [];
     
     public List<VoterElection> Elections { get; set; } = [];
     

@@ -5,9 +5,10 @@ namespace SOE.Entities;
 
 public class Otp {
 
-    [Key] public Guid Id { get; set; } = Guid.Empty;
+    [Key] 
+    public Guid Id { get; set; }
 
-    [MaxLength(20)] public string Value { get; set; } = string.Empty;  // TODO: store encrypted value
+    [MaxLength(20)] public string Value { get; set; }  // TODO: store encrypted value
     
     public DateTime ExpirationUtc { get; set; }
 
@@ -17,11 +18,11 @@ public class Otp {
         set => ExpirationUtc = value.UtcDateTime;
     }
     
-    public Guid VoterId { get; set; } = Guid.Empty;
+    public Guid VoterId { get; set; }
 
-    public Voter Voter { get; set; } = new Voter();
+    public Voter Voter { get; set; }
     
     [ConcurrencyCheck]
-    public bool Used { get; set; } = false;
+    public bool Used { get; set; }
     
 }
