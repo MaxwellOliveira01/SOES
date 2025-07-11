@@ -8,11 +8,15 @@ public interface IAuthenticationService {
      Task<AuthenticationResponse> AuthenticateAsync(Voter voter, string givenOtp);
 }
 
-public class AuthenticationService(AppDbContext appDbContext, ITokenService tokenService) : IAuthenticationService {
+public class AuthenticationService(
+     IOtpService otpService, 
+     IVoterSessionService voterSessionService,
+     AppDbContext appDbContext
+) : IAuthenticationService {
 
      public async Task<AuthenticationResponse> AuthenticateAsync(Voter voter, string givenOtp) {
 
-          if (!await tokenService.ValidateTokenAsync(voter.Id, givenOtp)) {
+          if (!await otpService.ValidateAsync(voter.Id, givenOtp)) {
                return new() {
                     Success = false,
                     ErrorMessage = "Invalid or expired token."
@@ -22,6 +26,7 @@ public class AuthenticationService(AppDbContext appDbContext, ITokenService toke
           return new() {
                Success = true,
                Elections = await GetElectionsAsync(voter),
+               Session = voterSessionService.CreateSession(voter, isAuthenticated: true)
           };
           
      }

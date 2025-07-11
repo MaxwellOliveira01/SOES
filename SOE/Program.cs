@@ -16,6 +16,7 @@ builder.Services.Configure<SmtpConfig>(
     builder.Configuration.GetSection("SmtpConfig")
 );
 
+builder.Services.AddDataProtection();
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment()) {

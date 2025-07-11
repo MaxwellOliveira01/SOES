@@ -8,12 +8,7 @@ public interface IIdentificationService {
     Task<IdentificationResponse> IdentifyAsync(string givenEmail);
 }
 
-public class IdentificationService: IIdentificationService {
-    private readonly AppDbContext appDbContext;
-
-    public IdentificationService(AppDbContext appDbContext) {
-        this.appDbContext = appDbContext;
-    }
+public class IdentificationService(AppDbContext appDbContext, IVoterSessionService voterSessionService) : IIdentificationService {
     
     public async Task<IdentificationResponse> IdentifyAsync(string givenEmail) {
 
@@ -33,7 +28,7 @@ public class IdentificationService: IIdentificationService {
             Success = true,
             ErrorMessage = null,
             Name = voter.Name,
-            Token = voter.Id.ToString() // TODO: use dataProtection
+            Session = voterSessionService.CreateSession(voter)
         };
         
     }

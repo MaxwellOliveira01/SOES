@@ -8,6 +8,6 @@ public class IdentificationResponse {
     
     public string Name { get; set; }
     
-    public string Token { get; set; }
+    public string Session { get; set; } = string.Empty;
     
 }
