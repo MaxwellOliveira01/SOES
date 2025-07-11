@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using SOE.Configuration;
 using SOE.Services;
 
@@ -16,7 +16,6 @@ builder.Services.Configure<SmtpConfig>(
     builder.Configuration.GetSection("SmtpConfig")
 );
 
-var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment()) {
@@ -24,10 +23,18 @@ var app = builder.Build();
 //     app.UseSwaggerUI();
 // }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-var scope = app.Services.CreateScope();
-// var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
-// await emailSender.SendOtpAsync("<TODO>", "123456");
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Database", "app.db");
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseSqlite($"Data Source={dbPath};")
+);
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope()) {
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.Run();
