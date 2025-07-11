@@ -7,16 +7,18 @@ namespace SOE.Controllers;
 [ApiController]
 [Route("api/authentication")]
 public class AuthenticationController(
-    AppDbContext appDbContext, 
-    IAuthenticationService authenticationService
+    IAuthenticationService authenticationService,
+    IVoterSessionService voterSessionService,
+    AppDbContext appDbContext
 ): ControllerBase {
 
     [HttpPost]
     public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request) {
-        var voter = await appDbContext.Voters.FindAsync(request.VoterId);
+        var session = voterSessionService.GetSession(request.Session);
+        var voter = await appDbContext.Voters.FindAsync(session.VoterId);
 
-        if (voter == default) {
-            throw new ArgumentException($"Voter with ID {request.VoterId} not found.");
+        if (voter == null) { // should not happen, since we protect this with dataProtection
+            throw new ArgumentException($"Voter with ID {session.VoterId} not found.");
         }
         
         return await authenticationService.AuthenticateAsync(voter, request.Otp);

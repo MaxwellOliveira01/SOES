@@ -3,19 +3,19 @@ using SOE.Entities;
 
 namespace SOE.Services;
 
-public interface ITokenService {
+public interface IOtpService {
 
-    Task<string> CreateToken(Guid voterId);
+    Task<string> CreateAsync(Guid voterId);
 
-    Task<bool> ValidateTokenAsync(Guid voterId, string token);
+    Task<bool> ValidateAsync(Guid voterId, string token);
     
 }
 
-public class TokenService(AppDbContext appDbContext) : ITokenService {
+public class OtpService(AppDbContext appDbContext) : IOtpService {
     
-    public async Task<string> CreateToken(Guid voterId) {
+    public async Task<string> CreateAsync(Guid voterId) {
 
-        var token = new Token {
+        var token = new Otp {
             Id = Guid.NewGuid(), // TODO: CombProvider?
             VoterId = voterId,
             // TODO: mover esse tempo e o tamanho do token para um OtpConfig ou TokenConfig
@@ -23,15 +23,15 @@ public class TokenService(AppDbContext appDbContext) : ITokenService {
             Value = GenerateTokenValue(6)
         };
 
-        await appDbContext.Tokens.AddAsync(token);
+        await appDbContext.Otps.AddAsync(token);
         await appDbContext.SaveChangesAsync();
         
         return token.Value;
     }
     
-    public async Task<bool> ValidateTokenAsync(Guid voterId, string token) {
+    public async Task<bool> ValidateAsync(Guid voterId, string token) {
         
-        var tokenEntity = await appDbContext.Tokens
+        var tokenEntity = await appDbContext.Otps
             .Where(o => o.VoterId == voterId && o.Value == token)
             .FirstOrDefaultAsync();
 

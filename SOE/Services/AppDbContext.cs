@@ -18,7 +18,7 @@ public class AppDbContext: DbContext {
     
     public DbSet<VoterElection> VoterElections { get; set; }
 
-    public DbSet<Token> Tokens { get; set; }
+    public DbSet<Otp> Otps { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
      
