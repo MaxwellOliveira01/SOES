@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ElectionFullModel, OptionModel } from '../api/models';
 import { KeyGenerationService } from '../key-generation.service';
 import { SubmitVoteService } from '../submit-vote.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-vote-dialog',
@@ -28,7 +29,8 @@ export class VoteDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<VoteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly keyGenerationService: KeyGenerationService,
-    private readonly submitVoteService: SubmitVoteService
+    private readonly submitVoteService: SubmitVoteService,
+    private readonly snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -97,6 +99,10 @@ export class VoteDialogComponent implements OnInit {
         this.publicKeyPem as string,
         signature
       );
+
+      this.snackBar.open('Voto registrado com sucesso!', '', {
+        duration: 10000,
+      });
 
       this.closeDialog();
 

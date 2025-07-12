@@ -15,7 +15,6 @@ export class ListElectionsComponent {
 
   onSelectElection(election: ElectionVoterModel) {
     this.selectElection.emit(election);
-    console.log('Election selected:', election);
   }
 
 }

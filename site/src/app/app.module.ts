@@ -19,6 +19,7 @@ import { ListElectionsComponent } from './list-elections/list-elections.componen
 import { ElectionDetailsComponent } from './election-details/election-details.component';
 import { VoteDialogComponent } from './vote-dialog/vote-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     NgxLoadingModule.forRoot({}),
     HttpClientModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule,
   ],
   providers: [
     provideAnimationsAsync()
