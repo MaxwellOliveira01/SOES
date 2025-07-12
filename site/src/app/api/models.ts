@@ -34,6 +34,7 @@ export interface ElectionVoterModel {
 
 export interface ElectionFullModel extends ElectionVoterModel {
   options: OptionModel[];
+  hasVoted: boolean;
 }
 
 export interface VoterElectionModelRequest {
