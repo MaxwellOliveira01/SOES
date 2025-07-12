@@ -102,12 +102,19 @@ export class VoteDialogComponent implements OnInit {
 
       this.snackBar.open('Voto registrado com sucesso!', '', {
         duration: 10000,
+        panelClass: ['snackbar-success']
       });
 
       this.closeDialog();
 
     } catch (error) {
       console.error('Error submitting vote:', error);
+
+      this.snackBar.open('Erro ao registrar voto. Tente novamente.', '', {
+        duration: 5000,
+        panelClass: ['snackbar-error']
+      });
+
     } finally {
       this.loading = false;
     }

@@ -9,3 +9,15 @@ html, body { height: 100%; }
   border-radius: 16px !important;
   overflow: hidden;
 }
+
+.snackbar-success {
+  background-color: #43a047 !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.snackbar-error {
+  background-color: #e53935 !important;
+  color: #fff !important;
+  font-weight: bold;
+}
