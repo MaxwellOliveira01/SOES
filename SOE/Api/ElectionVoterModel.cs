@@ -6,6 +6,4 @@ public class ElectionVoterModel {
     
     public string Name { get; set; }
     
-    public bool HasVoted { get; set; }
-    
 }

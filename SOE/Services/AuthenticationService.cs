@@ -25,23 +25,20 @@ public class AuthenticationService(
           
           return new() {
                Success = true,
-               Elections = await GetElectionsAsync(voter),
+               Elections = await GetElectionsAsync(),
                Session = voterSessionService.CreateSession(voter, isAuthenticated: true)
           };
           
      }
      
-     private async Task<List<ElectionVoterModel>> GetElectionsAsync(Voter voter) {
+     private async Task<List<ElectionVoterModel>> GetElectionsAsync() {
 
-          var elections = await appDbContext.Elections
-               .Include(e => e.Voters)
-               .ToListAsync();
+          var elections = await appDbContext.Elections.ToListAsync();
           
-          return elections.Select(e => new ElectionVoterModel {
+          return [.. elections.Select(e => new ElectionVoterModel {
                Id = e.Id,
                Name = e.Name,
-               HasVoted = e.Voters.Any(v => v.VoterId == voter.Id)
-          }).ToList();
+          })];
 
      }
      

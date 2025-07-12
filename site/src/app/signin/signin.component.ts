@@ -1,6 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { SigninService } from '../signin.service';
 import { NgModel } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ElectionVoterModel } from '../api/models';
 
 @Component({
   selector: 'app-signin',
@@ -9,24 +11,28 @@ import { NgModel } from '@angular/forms';
 })
 export class SigninComponent {
 
+  @Output() afterSignin = new EventEmitter<{ voterName: string, session: string, elections: ElectionVoterModel[] }>();
+
   step: 'email' | 'otp' = 'email';
 
   voterName: string | undefined = undefined;
-  session: string = "";
 
   email: string = '';
   emailErrorMessage: string | undefined = '';
   @ViewChild('emailModel') emailModel!: NgModel;
 
-  otp: number = 0;
+  otp: number | undefined = undefined;
   otpErrorMessage: string | undefined = '';
   @ViewChild('otpModel') otpModel!: NgModel;
 
+  session: string | undefined = undefined;
+
   loading: boolean = false;
 
-  constructor(private readonly signinService: SigninService) {
-
-  }
+  constructor(
+    private readonly signinService: SigninService,
+    private readonly router: Router,
+  ) { }
 
   async identify(sendOtp: boolean) {
     this.loading = true;
@@ -55,9 +61,17 @@ export class SigninComponent {
     this.loading = true;
 
     try {
-      let res = await this.signinService.authenticate(this.otp.toString(), this.session);
+      let res = await this.signinService.authenticate(this.otp?.toString() || '', this.session || '');
 
       if(res.success) {
+        this.session = res.session;
+
+        // We're about to be destroyed
+        this.afterSignin.emit({
+          voterName: this.voterName || '',
+          session: this.session || '',
+          elections: res.elections || []
+        });
 
       } else {
         console.error('Authentication failed:', res.errorMessage);
@@ -70,6 +84,10 @@ export class SigninComponent {
     } finally {
       this.loading = false;
     }
+  }
+
+  redirectToVoterHome() {
+    this.router.navigate(['/voter-home']);
   }
 
 

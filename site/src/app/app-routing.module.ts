@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SigninComponent } from './signin/signin.component';
 import { VoterHomeComponent } from './voter-home/voter-home.component';
 
 const routes: Routes = [
   { path: 'voter-home', component: VoterHomeComponent },
-  { path: 'signin', component: SigninComponent },
-  { path: '', redirectTo: '/signin', pathMatch: 'full' },
-  { path: '**', redirectTo: '/signin' }
+  { path: '', redirectTo: '/voter-home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/voter-home' }
 ];
 
 @NgModule({

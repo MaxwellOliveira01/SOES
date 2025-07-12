@@ -1,0 +1,19 @@
+<div class="d-flex flex-column justify-content-center">
+
+  <div class="text-center mb-1">
+    <h1> Lista de eleições </h1>
+  </div>
+
+  <div *ngFor="let election of elections" class="d-flex row mb-2">
+
+    <h3 class="col-9">
+      {{ election.name }}
+    </h3>
+
+    <button mat-flat-button color="primary" class="col-3" (click)="onSelectElection(election)">
+      Detalhes
+    </button>
+
+  </div>
+
+</div>

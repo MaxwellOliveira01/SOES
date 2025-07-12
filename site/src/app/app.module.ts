@@ -13,13 +13,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgxLoadingModule } from 'ngx-loading';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { ListElectionsComponent } from './list-elections/list-elections.component';
+import { ElectionDetailsComponent } from './election-details/election-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SigninComponent,
-    VoterHomeComponent
+    VoterHomeComponent,
+    ListElectionsComponent,
+    ElectionDetailsComponent
   ],
   imports: [
     BrowserModule,

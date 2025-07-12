@@ -22,8 +22,21 @@ export interface AuthenticationResponse {
   elections: ElectionVoterModel[];
 }
 
+export interface OptionModel {
+  id: string;
+  name: string;
+}
+
 export interface ElectionVoterModel {
   id: string;
   name: string;
-  hasVoted: boolean;
+}
+
+export interface ElectionFullModel extends ElectionVoterModel {
+  options: OptionModel[];
+}
+
+export interface VoterElectionModelRequest {
+  electionId: string;
+  session: string;
 }
