@@ -12,7 +12,7 @@ public class IdentificationController(
     
     [HttpPost]
     public async Task<IdentificationResponse> IdentifyAsync(IdentificationRequest request) { 
-        return await identificationService.IdentifyAsync(request.Email);
+        return await identificationService.IdentifyAsync(request.Email, request.SendOtp);
     }
     
 }
