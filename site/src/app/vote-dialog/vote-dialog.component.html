@@ -1,0 +1,81 @@
+<h2 mat-dialog-title>
+  {{ election?.name }}
+</h2>
+
+<mat-dialog-content>
+
+  @if(step === 'select') {
+    <p class="text-center">Escolha uma das seguintes opções</p>
+
+    <form>
+      <div *ngFor="let option of election?.options">
+        <mat-checkbox name="option_{{option.name}}" class="d-block mb-2" [checked]="option.id === selectedOption?.id"
+          (change)="select(option)">
+          {{ option.name }}
+        </mat-checkbox>
+      </div>
+
+      </form>
+  } @else {
+    <h3> Você selecionou a opção: {{ selectedOption?.name }} </h3>
+    <p> Para a segurança do seu voto, iremos encriptá-lo locamente usando uma chave secreta e segura. </p>
+    <p> Essa chave é separada em duas partes: Uma parte pública e uma parte privada </p>
+    <p> Iremos armazenar apenas a parte pública no servidor e a parte privada ficará com você. </p>
+    <p> Guarde bem sua parte da chave, é ela quem garantirá a segurança do seu voto. </p>
+
+
+
+
+
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+  @if(step === 'select') {
+    <div class="d-flex flex-row mb-3 mt-2 w-100 justify-content-between align-items-center">
+
+      <div class="me-2 w-50">
+        <button mat-stroked-button color="primary" class="w-100" (click)="closeDialog()">
+          Cancelar
+        </button>
+      </div>
+
+      <div class="ms-2 w-50">
+        <button mat-flat-button color="primary" class="w-100" (click)="goToConfirmation()" [disabled]="!selectedOption">
+          Ir para confirmação
+        </button>
+      </div>
+
+    </div>
+  } @else {
+
+    <div class="w-100">
+      <button mat-flat-button color="primary" class="w-100" (click)="generateKeys()" [disabled]="hasGeneratedKeys">
+        Gerar Chaves
+        </button>
+    </div>
+
+    <div class="d-flex flex-row mb-3 mt-2 w-100 justify-content-between align-items-center">
+
+      <div class="me-2 w-50">
+        <button mat-stroked-button color="primary" class="w-100" (click)="closeDialog()">
+          Cancelar
+        </button>
+      </div>
+
+      <div class="ms-2 w-50">
+        <button mat-flat-button color="primary" class="w-100" (click)="submitVote()" [disabled]="!hasGeneratedKeys">
+          Votar
+        </button>
+      </div>
+
+    </div>
+
+  }
+
+</mat-dialog-actions>
+
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VoterHomeComponent } from './voter-home/voter-home.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +17,8 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { HttpClientModule } from '@angular/common/http';
 import { ListElectionsComponent } from './list-elections/list-elections.component';
 import { ElectionDetailsComponent } from './election-details/election-details.component';
+import { VoteDialogComponent } from './vote-dialog/vote-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import { ElectionDetailsComponent } from './election-details/election-details.co
     SigninComponent,
     VoterHomeComponent,
     ListElectionsComponent,
-    ElectionDetailsComponent
+    ElectionDetailsComponent,
+    VoteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +39,9 @@ import { ElectionDetailsComponent } from './election-details/election-details.co
     MatFormFieldModule,
     MatSlideToggleModule,
     NgxLoadingModule.forRoot({}),
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatCheckboxModule
   ],
   providers: [
     provideAnimationsAsync()

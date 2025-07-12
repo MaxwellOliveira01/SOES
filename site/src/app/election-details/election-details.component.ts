@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ElectionFullModel } from '../api/models';
+import { ElectionService } from '../election.service';
+import { MatDialog } from '@angular/material/dialog';
+import { VoteDialogComponent } from '../vote-dialog/vote-dialog.component';
 
 @Component({
   selector: 'app-election-details',
@@ -8,18 +11,50 @@ import { ElectionFullModel } from '../api/models';
 })
 export class ElectionDetailsComponent implements OnInit {
 
-  @Input() election: ElectionFullModel | undefined;
+  @Input() electionId: string = '';
+  @Input() session: string | undefined = '';
 
-  constructor() {
+  @Output() onBack: EventEmitter<null> = new EventEmitter<null>();
+
+  loading: boolean = true;
+
+  election: ElectionFullModel | undefined;
+
+  constructor(
+    private readonly electionService: ElectionService,
+    private readonly dialog: MatDialog
+  ) {
 
   }
 
-  ngOnInit(): void {
-    if (this.election) {
-      console.log('Election Details:', this.election);
-    } else {
-      console.warn('No election data provided');
+  async ngOnInit(): Promise<void> {
+    await this.getElection(this.electionId);
+  }
+
+  async getElection(electionId: string) {
+    this.loading = true;
+    try {
+      this.election = await this.electionService.getElectionById(electionId, this.session || '');
+      this.loading = false;
+    } catch (error) {
+      console.error('Error fetching election:', error);
+      this.loading = false;
     }
+  }
+
+  back() {
+    this.onBack.emit();
+  }
+
+  vote() {
+    this.dialog.open(VoteDialogComponent, {
+      width: '400px',
+      data: { election: this.election, session: this.session },
+      disableClose: true,
+      panelClass: 'custom-dialog-container'
+    }).afterClosed().subscribe(r => {
+      this.getElection(this.electionId);
+    });
   }
 
 }

@@ -6,7 +6,7 @@
     <app-list-elections [elections]="elections" (selectElection)="afterSelectElection($event)"></app-list-elections>
   }
   @case ('election-details') {
-    <app-election-details [election]="selectedElection"></app-election-details>
+    <app-election-details [electionId]="selectedElectionId" [session]="session" (onBack)="onBackFromDetails()"></app-election-details>
   }
   @default {
     <p>Unknown step</p>
