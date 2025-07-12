@@ -1,15 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SOE.Entities;
 
 public class Option {
-    
-    [Key]
-    public Guid Id { get; set; }
+
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     public string Name { get; set; }
 
-    public Guid ElectionId { get; set; }
+    public int ElectionId { get; set; }
     public Election Election { get; set; }
     
 }
