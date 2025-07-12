@@ -10,6 +10,9 @@ builder.Services.AddScoped<IIdentificationService, IdentificationService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IVoterSessionService, VoterSessionService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
+builder.Services.AddScoped<ISubmitVoteService, SubmitVoteService>();
+
+builder.Services.AddScoped<SignatureService>();
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 

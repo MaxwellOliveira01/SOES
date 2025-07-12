@@ -2,6 +2,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
 import { ElectionFullModel, OptionModel } from '../api/models';
 import { KeyGenerationService } from '../key-generation.service';
+import { SubmitVoteService } from '../submit-vote.service';
 
 @Component({
   selector: 'app-vote-dialog',
@@ -26,7 +27,8 @@ export class VoteDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<VoteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly keyGenerationService: KeyGenerationService
+    private readonly keyGenerationService: KeyGenerationService,
+    private readonly submitVoteService: SubmitVoteService
   ) { }
 
   ngOnInit(): void {
@@ -55,8 +57,6 @@ export class VoteDialogComponent implements OnInit {
       this.publicKeyPem = publicKeyPem;
       this.privateKeyPem = privateKeyPem;
       this.hasGeneratedKeys = true;
-      console.log(privateKeyPem, publicKeyPem);
-
       this.downloadKey();
     }).catch(err => {
       console.error('Error generating keys:', err);
@@ -77,12 +77,33 @@ export class VoteDialogComponent implements OnInit {
     a.download = 'private_key.pem';
     a.click();
     window.URL.revokeObjectURL(url);
-
   }
 
-  submitVote(): void {
+  async submitVote() {
     if (!this.hasGeneratedKeys) {
       return;
+    }
+
+    let signature = this.keyGenerationService.signData(this.privateKeyPem as string, this.selectedOption?.id || '');
+
+    this.loading = true;
+
+    try {
+
+      await this.submitVoteService.submitVote(
+        this.session as string,
+        this.election?.id as string,
+        this.selectedOption?.id as string,
+        this.publicKeyPem as string,
+        signature
+      );
+
+      this.closeDialog();
+
+    } catch (error) {
+      console.error('Error submitting vote:', error);
+    } finally {
+      this.loading = false;
     }
   }
 

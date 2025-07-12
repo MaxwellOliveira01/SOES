@@ -14,9 +14,9 @@ public class VoterElection {
     public int ElectionId { get; set; }
     public Election Election { get; set; }
 
-    public byte[] VoterPublicKey { get; set; }
+    public string VoterPublicKeyPem { get; set; }
     
-    public byte[] VoterSignature { get; set; }
+    public string Signature { get; set; }
     
     public int OptionId { get; set; }
     public Option Option { get; set; }

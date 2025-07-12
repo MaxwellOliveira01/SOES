@@ -41,3 +41,11 @@ export interface VoterElectionModelRequest {
   electionId: string;
   session: string;
 }
+
+export interface SubmitVoteRequest {
+  session: string;
+  electionId: string;
+  optionId: string;
+  publicKeyPem: string;
+  signature: string;
+}

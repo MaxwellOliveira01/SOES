@@ -2,14 +2,14 @@ namespace SOE.Api;
 
 public class SubmitVoteRequest {
     
-    public int VoterId { get; set; }
+    public string Session { get; set; }
     
     public int ElectionId { get; set; }
     
     public int OptionId { get; set; }
     
-    public string Token { get; set; }
+    public string PublicKeyPem { get; set; }
 
-    // put other fields of signature here
+    public string Signature { get; set; }
     
 }

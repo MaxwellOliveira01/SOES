@@ -32,4 +32,12 @@ export class KeyGenerationService {
     return forge.util.encode64(signature);
   }
 
+  verifySignature(publicKeyPem: string, data: string, signatureBase64: string): boolean {
+    const publicKey = forge.pki.publicKeyFromPem(publicKeyPem);
+    const md = forge.md.sha256.create();
+    md.update(data, 'utf8');
+    const signature = forge.util.decode64(signatureBase64);
+    return publicKey.verify(md.digest().bytes(), signature);
+  }
+
 }

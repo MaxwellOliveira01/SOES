@@ -4,31 +4,31 @@ using SOE.Entities;
 namespace SOE.Services;
 
 public interface ISubmitVoteService {
-    
+    Task SubmitAsync(Voter voter, int electionId, int optionId, string publicKeyPem, string signature);
 }
 
-public class SubmitVoteService(AppDbContext appDbContext) : ISubmitVoteService {
+public class SubmitVoteService(
+    AppDbContext appDbContext
+) : ISubmitVoteService {
     
-    public async Task SubmitVoteAsync(Voter voter, int electionId, int optionId) {
+    public async Task SubmitAsync(Voter voter, int electionId, int optionId, string publicKeyPem, string signature) {
 
-        var election = await appDbContext.Elections.FindAsync(electionId);
-        
-        if (election == null) {
-            throw new Exception("Election not found");
-        }
-        
-        var option = await appDbContext.Options.FindAsync(optionId);
-        
-        if (option == null) {
-            throw new Exception("Option not found");
-        }
+        var election = await appDbContext.Elections.FindAsync(electionId)
+            ?? throw new InvalidOperationException("Election not found");
+
+        var option = await appDbContext.Options.FindAsync(optionId)
+            ?? throw new InvalidOperationException("Option not found");
         
         if(option.ElectionId != electionId) {
-            throw new Exception("Option does not belong to the specified election");
+            throw new InvalidOperationException("Option does not belong to the specified election");
         }
         
-        if(appDbContext.VoterElections.Any(ve => ve.VoterId == voter.Id && ve.ElectionId == electionId)) {
-            throw new Exception("Voter has already voted in this election");
+        if(await appDbContext.VoterElections.CountAsync(ve => ve.VoterId == voter.Id && ve.ElectionId == electionId) > 0) {
+            throw new InvalidOperationException("Voter has already voted in this election");
+        }
+
+        if(!SignatureService.Verify(publicKeyPem, optionId, signature)) {
+            throw new InvalidOperationException("Invalid signature for the vote option");
         }
 
         var voterElection = new VoterElection {
@@ -39,14 +39,15 @@ public class SubmitVoteService(AppDbContext appDbContext) : ISubmitVoteService {
             Option = option,
             OptionId = optionId,
             VoteTime = DateTimeOffset.UtcNow,
-            // add other fields of signature here
+            Signature = signature,
+            VoterPublicKeyPem = publicKeyPem
         };
         
         try {
             appDbContext.VoterElections.Add(voterElection);
             await appDbContext.SaveChangesAsync();
-        } catch (DbUpdateException exception) {
-            throw new Exception("Already voted");
+        } catch (DbUpdateException _){
+            throw new InvalidOperationException("Already voted");
         }
         
     }
