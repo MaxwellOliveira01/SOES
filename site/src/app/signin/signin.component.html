@@ -1,16 +1,70 @@
-<div class="d-flex align-items-center justify-content-center">
-  
-  <div class="text-center mb-4">
-    <h1 class="mb-2">Bem vindo!</h1>
-    <p>Por favor, informe seu e-mail cadastrado para continuar.</p>
-  </div>
+<div class="d-flex flex-column align-items-center justify-content-center">
 
-  <mat-form-field appearance="fill" class="w-100">
-    <mat-label>E-mail</mat-label>
-    <input matInput name="email" [(ngModel)]="email" required placeholder="Digite seu e-mail" class="form-control">
-  </mat-form-field>
+  @if(step === 'email') {
 
-  <button mat-flat-button color="primary" class="w-100" (click)="identify()">Continuar</button>
+    <div class="text-center mb-2">
+      <h1 class="mb-2">Bem vindo!</h1>
+      <p>Por favor, informe seu e-mail cadastrado para continuar.</p>
+    </div>
+
+    <mat-form-field class="w-100">
+      <mat-label>E-mail</mat-label>
+
+      <input
+        matInput
+        name="email"
+        [(ngModel)]="email"
+        #emailModel="ngModel"
+        required
+        email
+        type="email"
+        placeholder="Digite seu e-mail">
+
+      <mat-error *ngIf="emailModel.invalid && emailModel.touched">
+        {{ emailErrorMessage ? emailErrorMessage : 'Por favor, insira um e-mail válido.' }}
+      </mat-error>
+
+      </mat-form-field>
+
+    <button mat-flat-button color="primary" class="w-100 m-2" (click)="identify(true)" [disabled]="emailModel.invalid">
+      Receber um código de verificação
+    </button>
+
+    <button mat-stroked-button color="primary" class="w-100 m-2" (click)="identify(false)" [disabled]="emailModel.invalid">
+      Já possuo um código de verificação
+    </button>
+
+  } @else {
+
+    <div class="text-center mb-2">
+      <h1 class="mb-2"> Bem vindo, {{ voterName }}! </h1>
+      <p> Insira o código de verificação enviado para o seu e-mail  </p>
+    </div>
+
+    <mat-form-field class="w-100">
+
+      <mat-label>Código de verificação</mat-label>
+
+      <input
+        matInput
+        name="otp"
+        type="number"
+        [(ngModel)]="otp"
+        #otpModel="ngModel"
+        required
+        placeholder="Digite o código de verificação">
+
+        <mat-error *ngIf="otpModel.invalid && otpModel.touched">
+          {{ otpErrorMessage ? otpErrorMessage : 'Por favor, insira um código de verificação válido.' }}
+        </mat-error>
+
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" class="w-100" (click)="authenticate()" [disabled]="otpModel.invalid">
+      Autenticar
+    </button>
+
+  }
 
 </div>
 

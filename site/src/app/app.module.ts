@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgxLoadingModule } from 'ngx-loading';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { NgxLoadingModule } from 'ngx-loading';
     MatInputModule,
     MatFormFieldModule,
     MatSlideToggleModule,
-    NgxLoadingModule.forRoot({})
+    NgxLoadingModule.forRoot({}),
+    HttpClientModule
   ],
   providers: [
     provideAnimationsAsync()
