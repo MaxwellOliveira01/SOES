@@ -6,4 +6,6 @@ public class VoterSession {
     
     public bool IsAuthenticated { get; set; }
     
+    // TODO: add expiration date
+    
 }

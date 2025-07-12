@@ -1,0 +1,17 @@
+<div class="d-flex align-items-center justify-content-center">
+  
+  <div class="text-center mb-4">
+    <h1 class="mb-2">Bem vindo!</h1>
+    <p>Por favor, informe seu e-mail cadastrado para continuar.</p>
+  </div>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>E-mail</mat-label>
+    <input matInput name="email" [(ngModel)]="email" required placeholder="Digite seu e-mail" class="form-control">
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" class="w-100" (click)="identify()">Continuar</button>
+
+</div>
+
+<ngx-loading [show]="loading"></ngx-loading>
