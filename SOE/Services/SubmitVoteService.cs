@@ -9,7 +9,7 @@ public interface ISubmitVoteService {
 
 public class SubmitVoteService(AppDbContext appDbContext) : ISubmitVoteService {
     
-    public async Task SubmitVoteAsync(Voter voter, Guid electionId, Guid optionId) {
+    public async Task SubmitVoteAsync(Voter voter, int electionId, int optionId) {
 
         var election = await appDbContext.Elections.FindAsync(electionId);
         

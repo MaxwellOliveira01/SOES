@@ -5,20 +5,18 @@ namespace SOE.Services;
 
 public interface IOtpService {
 
-    Task<string> CreateAsync(Guid voterId);
+    Task<string> CreateAsync(Voter voter);
 
-    Task<bool> ValidateAsync(Guid voterId, string token);
+    Task<bool> ValidateAsync(int voterId, string token);
     
 }
 
 public class OtpService(AppDbContext appDbContext) : IOtpService {
     
-    public async Task<string> CreateAsync(Guid voterId) {
+    public async Task<string> CreateAsync(Voter voter) {
 
         var token = new Otp {
-            Id = Guid.NewGuid(), // TODO: CombProvider?
-            VoterId = voterId,
-            // TODO: mover esse tempo e o tamanho do token para um OtpConfig ou TokenConfig
+            VoterId = voter.Id,
             Expiration = DateTime.UtcNow.AddMinutes(2),
             Value = GenerateTokenValue(6)
         };
@@ -29,7 +27,7 @@ public class OtpService(AppDbContext appDbContext) : IOtpService {
         return token.Value;
     }
     
-    public async Task<bool> ValidateAsync(Guid voterId, string token) {
+    public async Task<bool> ValidateAsync(int voterId, string token) {
         
         var tokenEntity = await appDbContext.Otps
             .Where(o => o.VoterId == voterId && o.Value == token)
@@ -43,9 +41,10 @@ public class OtpService(AppDbContext appDbContext) : IOtpService {
             return false;
         }
 
-        if (tokenEntity.Used) {
-            return false;
-        }
+        // TODO: descomentar isso!!!
+        //if (tokenEntity.Used) {
+        //    return false;
+        //}
 
         tokenEntity.Used = true;
         await appDbContext.SaveChangesAsync();

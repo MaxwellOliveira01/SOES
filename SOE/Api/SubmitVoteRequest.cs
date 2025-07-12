@@ -2,11 +2,11 @@ namespace SOE.Api;
 
 public class SubmitVoteRequest {
     
-    public Guid VoterId { get; set; }
+    public int VoterId { get; set; }
     
-    public Guid ElectionId { get; set; }
+    public int ElectionId { get; set; }
     
-    public Guid OptionId { get; set; }
+    public int OptionId { get; set; }
     
     public string Token { get; set; }
 

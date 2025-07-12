@@ -2,7 +2,7 @@ namespace SOE.Api;
 
 public class ElectionVoterModel {
     
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     
     public string Name { get; set; }
     

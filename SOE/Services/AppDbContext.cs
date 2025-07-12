@@ -21,10 +21,10 @@ public class AppDbContext: DbContext {
     public DbSet<Otp> Otps { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-     
-        modelBuilder.Entity<Entities.VoterElection>()
-            .HasKey(ve => new { ve.VoterId, ve.ElectionId });
-        
+
+        modelBuilder.Entity<VoterElection>()
+            .HasIndex(ve => new { ve.VoterId, ve.ElectionId }).IsUnique();
+
         base.OnModelCreating(modelBuilder);
     }
     

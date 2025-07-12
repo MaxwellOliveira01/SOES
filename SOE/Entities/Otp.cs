@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SOE.Entities;
 
 public class Otp {
+    
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
-    [Key] 
-    public Guid Id { get; set; }
-
-    [MaxLength(20)] public string Value { get; set; }  // TODO: store encrypted value
+    [MaxLength(20)] 
+    public string Value { get; set; }  // TODO: store encrypted value
     
     public DateTime ExpirationUtc { get; set; }
 
@@ -18,7 +19,7 @@ public class Otp {
         set => ExpirationUtc = value.UtcDateTime;
     }
     
-    public Guid VoterId { get; set; }
+    public int VoterId { get; set; }
 
     public Voter Voter { get; set; }
     

@@ -1,20 +1,24 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SOE.Entities;
 
 public class VoterElection {
-    
-    public Guid VoterId { get; set; }
+
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    public int VoterId { get; set; }
     public Voter Voter { get; set; }
 
-    public Guid ElectionId { get; set; }
+    public int ElectionId { get; set; }
     public Election Election { get; set; }
 
     public byte[] VoterPublicKey { get; set; }
     
     public byte[] VoterSignature { get; set; }
     
-    public Guid OptionId { get; set; }
+    public int OptionId { get; set; }
     public Option Option { get; set; }
     
     public DateTime VoteTimeUtc { get; set; }
