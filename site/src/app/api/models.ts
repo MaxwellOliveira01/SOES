@@ -49,3 +49,16 @@ export interface SubmitVoteRequest {
   publicKeyPem: string;
   signature: string;
 }
+
+export interface OptionResult {
+  id: string;
+  name: string;
+  votes: number;
+}
+
+export interface ElectionResult {
+  id: string;
+  name: string;
+  annuledVotes: number;
+  options: OptionResult[];
+}

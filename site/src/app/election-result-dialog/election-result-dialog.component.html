@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>
+  Apuração
+</h2>
+
+<mat-dialog-content>
+
+  <p> Resultados da eleição para {{ results.name }}</p>
+
+  <div *ngIf="results.options.length  > 0">
+
+    <ul>
+      <li *ngFor="let option of results.options">
+        {{ option.name }}: {{ option.votes }} votos
+      </li>
+    </ul>
+
+    <p *ngIf="results.annuledVotes > 0" class="text-danger">
+      Além desses, houveram {{ results.annuledVotes }} votos anulados.
+    </p>
+
+  </div>
+
+  <p *ngIf="!results.options || results.options.length === 0">
+    Nenhum resultado disponível.
+  </p>
+
+</mat-dialog-content>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,11 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using SOE.Api;
 using SOE.Entities;
 using System.Security.Cryptography;
 
 namespace SOE.Services;
 
 public interface IVoteService {
+    
     Task SubmitAsync(Voter voter, int electionId, int optionId, string publicKeyPem, string signature);
+
+    Task<ElectionResult> GetElectionResultAsync(int electionId);
+
 }
 
 public class VoteService(
@@ -56,19 +61,66 @@ public class VoteService(
         try {
             appDbContext.VoterElections.Add(voterElection);
             await appDbContext.SaveChangesAsync();
-        } catch (DbUpdateException _){
+        } catch (DbUpdateException ex) when(ex.InnerException is Microsoft.Data.Sqlite.SqliteException sqliteEx && sqliteEx.SqliteErrorCode == 19) { // unique constraint
             throw new InvalidOperationException("Already voted");
         }
 
     }
 
-    public async Task<bool> IsVoteValid(VoterElection voterElection) {
+    public async Task<ElectionResult> GetElectionResultAsync(int electionId) {
+
+        var election = await appDbContext.Elections.FirstAsync(e => e.Id == electionId);
+
+        var voterElections = await appDbContext.VoterElections
+            .Where(ve => ve.ElectionId == electionId)
+            .Include(ve => ve.Option)
+            .Include(ve => ve.Server)
+            .ToListAsync();
+
+        var optionVoteCount = new Dictionary<int, int>();
+        int annuledVoteCount = 0;
+
+        foreach (var voterElection in voterElections) {
+            if(IsVoteValid(voterElection, voterElection.Server)) {
+
+                if (!optionVoteCount.ContainsKey(voterElection.OptionId)) {
+                    optionVoteCount.Add(voterElection.OptionId, 0);
+                }
+                
+                optionVoteCount[voterElection.OptionId]++;
+
+            } else {
+                annuledVoteCount++;
+            }
+        }
+        
+        var allOptions = await appDbContext.Options.Where(o => o.ElectionId == electionId).ToListAsync();
+
+        var optionResult = allOptions.Select(o => {
+            return new OptionResult() {
+                Id = o.Id,
+                Name = o.Name,
+                Votes = optionVoteCount.GetValueOrDefault(o.Id)
+            };
+        });
+
+
+        return new ElectionResult() {
+            Id = electionId,
+            Name = election.Name,
+            AnnuledVotes = annuledVoteCount,
+            Options = optionResult.OrderByDescending(r => r.Votes).ToList(),
+        };
+
+    }
+
+
+    private static bool IsVoteValid(VoterElection voterElection, Server server) {
         
         if(!SignatureService.Verify(voterElection.VoterPublicKey, voterElection.OptionId, voterElection.Signature)) {
             return false;
         }
 
-        var server = await appDbContext.Servers.FirstAsync(s => s.Id == voterElection.ServerId);
         var rsa = RSA.Create();
         rsa.ImportSubjectPublicKeyInfo(server.PublicKey, out _);
 

@@ -7,7 +7,11 @@ namespace SOE.Controllers;
 
 [ApiController]
 [Route("api/elections")]
-public class ElectionsController(AppDbContext appDbContext, IVoterSessionService voterSessionService): ControllerBase {
+public class ElectionsController(
+    AppDbContext appDbContext, 
+    IVoterSessionService voterSessionService, 
+    IVoteService voteService
+) : ControllerBase {
 
     [HttpPost]
     public async Task<ElectionFullModel> GetElectionAsync(VoterElectionModelRequest request) {
@@ -36,6 +40,11 @@ public class ElectionsController(AppDbContext appDbContext, IVoterSessionService
             })],
         };
 
+    }
+
+    [HttpGet("result/{id}")]
+    public async Task<ElectionResult> GetResultAsync(int id){
+        return await voteService.GetElectionResultAsync(id);
     }
 
 }

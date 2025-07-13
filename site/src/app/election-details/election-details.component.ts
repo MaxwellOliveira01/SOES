@@ -3,6 +3,7 @@ import { ElectionFullModel } from '../api/models';
 import { ElectionService } from '../election.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VoteDialogComponent } from '../vote-dialog/vote-dialog.component';
+import { ElectionResultDialogComponent } from '../election-result-dialog/election-result-dialog.component';
 
 @Component({
   selector: 'app-election-details',
@@ -54,6 +55,14 @@ export class ElectionDetailsComponent implements OnInit {
       panelClass: 'custom-dialog-container'
     }).afterClosed().subscribe(r => {
       this.getElection(this.electionId);
+    });
+  }
+
+  showResults() {
+    this.dialog.open(ElectionResultDialogComponent, {
+      width: '400px',
+      data: { electionId: this.election?.id },
+      panelClass: 'custom-dialog-container'
     });
   }
 

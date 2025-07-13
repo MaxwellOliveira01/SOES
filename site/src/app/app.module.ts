@@ -20,6 +20,7 @@ import { ElectionDetailsComponent } from './election-details/election-details.co
 import { VoteDialogComponent } from './vote-dialog/vote-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ElectionResultDialogComponent } from './election-result-dialog/election-result-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     VoterHomeComponent,
     ListElectionsComponent,
     ElectionDetailsComponent,
-    VoteDialogComponent
+    VoteDialogComponent,
+    ElectionResultDialogComponent
   ],
   imports: [
     BrowserModule,
