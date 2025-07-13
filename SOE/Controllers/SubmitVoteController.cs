@@ -8,7 +8,7 @@ namespace SOE.Controllers;
 [Route("api/submit-vote")]
 public class SubmitVoteController(
     IVoterSessionService voterSessionService,
-    ISubmitVoteService submitVoteService,
+    IVoteService submitVoteService,
     AppDbContext appDbContext
 ): ControllerBase {
 

@@ -19,6 +19,8 @@ public class AppDbContext: DbContext {
     public DbSet<VoterElection> VoterElections { get; set; }
 
     public DbSet<Otp> Otps { get; set; }
+
+    public DbSet<Server> Servers { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
 

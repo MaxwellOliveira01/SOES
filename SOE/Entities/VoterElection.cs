@@ -14,9 +14,9 @@ public class VoterElection {
     public int ElectionId { get; set; }
     public Election Election { get; set; }
 
-    public string VoterPublicKeyPem { get; set; }
+    public byte[] VoterPublicKey { get; set; }
     
-    public string Signature { get; set; }
+    public byte[] Signature { get; set; }
     
     public int OptionId { get; set; }
     public Option Option { get; set; }
@@ -28,5 +28,12 @@ public class VoterElection {
         get => new DateTimeOffset(VoteTimeUtc, TimeSpan.Zero);
         set => VoteTimeUtc = value.UtcDateTime;
     }
+
+    public int ServerId { get; set; }
+
+    public Server Server { get; set; }
+
+    public byte[] ServerSignature { get; set; }
+
     
 }

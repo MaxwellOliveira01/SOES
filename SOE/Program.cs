@@ -10,11 +10,12 @@ builder.Services.AddScoped<IIdentificationService, IdentificationService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IVoterSessionService, VoterSessionService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
-builder.Services.AddScoped<ISubmitVoteService, SubmitVoteService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 
 builder.Services.AddScoped<SignatureService>();
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<ServerService>();
 
 builder.Services.Configure<SmtpConfig>(
     builder.Configuration.GetSection("SmtpConfig")
@@ -51,5 +52,14 @@ using (var scope = app.Services.CreateScope()) {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
 }
+
+async Task StartupAsync(IServiceProvider services) {
+    using var scope = services.CreateScope();
+    var serverService = scope.ServiceProvider.GetRequiredService<ServerService>();
+    var appDbContext = scope.ServiceProvider.GetService<AppDbContext>();
+    await serverService.Init(appDbContext);
+}
+
+await StartupAsync(app.Services);
 
 app.Run();

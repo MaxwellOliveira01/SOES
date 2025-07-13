@@ -1,15 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using SOE.Entities;
+using System.Security.Cryptography;
 
 namespace SOE.Services;
 
-public interface ISubmitVoteService {
+public interface IVoteService {
     Task SubmitAsync(Voter voter, int electionId, int optionId, string publicKeyPem, string signature);
 }
 
-public class SubmitVoteService(
-    AppDbContext appDbContext
-) : ISubmitVoteService {
+public class VoteService(
+    AppDbContext appDbContext,
+    ServerService serverService
+) : IVoteService {
     
     public async Task SubmitAsync(Voter voter, int electionId, int optionId, string publicKeyPem, string signature) {
 
@@ -31,6 +33,12 @@ public class SubmitVoteService(
             throw new InvalidOperationException("Invalid signature for the vote option");
         }
 
+        using RSA rsa = RSA.Create();
+        rsa.ImportFromPem(publicKeyPem);
+
+        byte[] signatureBytes = Convert.FromBase64String(signature);
+        byte[] publicKeyBytes = rsa.ExportSubjectPublicKeyInfo();
+
         var voterElection = new VoterElection {
             Voter = voter,
             VoterId = voter.Id,
@@ -39,8 +47,10 @@ public class SubmitVoteService(
             Option = option,
             OptionId = optionId,
             VoteTime = DateTimeOffset.UtcNow,
-            Signature = signature,
-            VoterPublicKeyPem = publicKeyPem
+            Signature = signatureBytes,
+            VoterPublicKey = publicKeyBytes,
+            ServerId = serverService.Server.Id,
+            ServerSignature = serverService.Sign(signatureBytes),
         };
         
         try {
@@ -49,7 +59,20 @@ public class SubmitVoteService(
         } catch (DbUpdateException _){
             throw new InvalidOperationException("Already voted");
         }
-        
+
     }
-    
+
+    public async Task<bool> IsVoteValid(VoterElection voterElection) {
+        
+        if(!SignatureService.Verify(voterElection.VoterPublicKey, voterElection.OptionId, voterElection.Signature)) {
+            return false;
+        }
+
+        var server = await appDbContext.Servers.FirstAsync(s => s.Id == voterElection.ServerId);
+        var rsa = RSA.Create();
+        rsa.ImportSubjectPublicKeyInfo(server.PublicKey, out _);
+
+        return rsa.VerifyData(voterElection.Signature, voterElection.ServerSignature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+    }
+
 }

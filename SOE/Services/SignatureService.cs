@@ -13,4 +13,11 @@ public class SignatureService {
         return rsa.VerifyData(dataBytes, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
     }
 
+    public static bool Verify(byte[] publicKey, int optionId, byte[] signature){
+        using RSA rsa = RSA.Create();
+        rsa.ImportSubjectPublicKeyInfo(publicKey, out var _);
+        byte[] dataBytes = Encoding.UTF8.GetBytes(optionId.ToString());
+        return rsa.VerifyData(dataBytes, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+    }
+
 }
