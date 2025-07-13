@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { AuthenticationRequest, AuthenticationResponse, IdentificationRequest, IdentificationResponse } from './api/models';
+import { AuthenticationRequest, AuthenticationResponse, IdentificationRequest, IdentificationResponse, SendOtpRequest } from './api/models';
 
 const apiRoute: string = 'http://localhost:5173/api';
 
@@ -21,6 +21,12 @@ export class SigninService {
   async authenticate(otp: string, session: string) {
     return firstValueFrom(
       this.httpClient.post<AuthenticationResponse>(`${apiRoute}/authentication`, <AuthenticationRequest>{ otp, session })
+    );
+  }
+
+  async sendOtp(session: string) {
+    return firstValueFrom(
+      this.httpClient.post(`${apiRoute}/otp/send`, <SendOtpRequest>{ session })
     );
   }
 

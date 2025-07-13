@@ -4,25 +4,27 @@
 
 <mat-dialog-content>
 
-  <p> Resultados da eleição para {{ results.name }}</p>
+  @if(results) {
+    <p> Resultados da eleição para {{ results.name }}</p>
 
-  <div *ngIf="results.options.length  > 0">
+    <div *ngIf="results.options.length  > 0">
 
-    <ul>
-      <li *ngFor="let option of results.options">
-        {{ option.name }}: {{ option.votes }} votos
-      </li>
-    </ul>
+      <ul>
+        <li *ngFor="let option of results.options">
+          {{ option.name }}: {{ option.votes }} votos
+        </li>
+      </ul>
 
-    <p *ngIf="results.annuledVotes > 0" class="text-danger">
-      Além desses, houveram {{ results.annuledVotes }} votos anulados.
+      <p *ngIf="results.annuledVotes > 0" class="text-danger">
+        Além desses, houveram {{ results.annuledVotes }} votos anulado(s).
+      </p>
+
+    </div>
+
+    <p *ngIf="!results.options || results.options.length === 0">
+      Nenhum resultado disponível.
     </p>
-
-  </div>
-
-  <p *ngIf="!results.options || results.options.length === 0">
-    Nenhum resultado disponível.
-  </p>
+  }
 
 </mat-dialog-content>
 

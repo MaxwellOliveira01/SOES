@@ -86,6 +86,18 @@ export class SigninComponent {
     }
   }
 
+  async sendOtp() {
+    this.loading = true;
+
+    try {
+      await this.signinService.sendOtp(this.session || '');
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   redirectToVoterHome() {
     this.router.navigate(['/voter-home']);
   }

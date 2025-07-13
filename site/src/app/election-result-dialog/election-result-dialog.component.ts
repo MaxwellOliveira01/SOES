@@ -28,7 +28,6 @@ export class ElectionResultDialogComponent implements OnInit {
     this.loading = true;
     try {
       this.results = await this.electionService.getResult(this.data.electionId);
-      console.log('Election results:', this.results);
     } finally {
       this.loading = false;
     }

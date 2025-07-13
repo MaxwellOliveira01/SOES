@@ -15,6 +15,10 @@ export interface AuthenticationRequest {
   session: string;
 }
 
+export interface SendOtpRequest {
+  session: string;
+}
+
 export interface AuthenticationResponse {
   success: boolean;
   errorMessage?: string;
