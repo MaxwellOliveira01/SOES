@@ -34,6 +34,7 @@ export interface OptionModel {
 export interface ElectionVoterModel {
   id: string;
   name: string;
+  description: string;
 }
 
 export interface ElectionFullModel extends ElectionVoterModel {

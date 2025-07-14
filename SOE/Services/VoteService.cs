@@ -45,11 +45,8 @@ public class VoteService(
         byte[] publicKeyBytes = rsa.ExportSubjectPublicKeyInfo();
 
         var voterElection = new VoterElection {
-            Voter = voter,
             VoterId = voter.Id,
-            Election = election,
             ElectionId = electionId,
-            Option = option,
             OptionId = optionId,
             VoteTime = DateTimeOffset.UtcNow,
             Signature = signatureBytes,

@@ -38,6 +38,7 @@ public class AuthenticationService(
           return [.. elections.Select(e => new ElectionVoterModel {
                Id = e.Id,
                Name = e.Name,
+               Description = e.Description,
           })];
 
      }

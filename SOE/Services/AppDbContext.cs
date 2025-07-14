@@ -26,9 +26,12 @@ public class AppDbContext: DbContext {
 
         modelBuilder.Entity<VoterElection>()
             .HasIndex(ve => new { ve.VoterId, ve.ElectionId }).IsUnique();
-
-        modelBuilder.Entity<VoterElection>()
-            .HasIndex(ve => new { ve.Signature }).IsUnique();
+        
+        // modelBuilder.Entity<VoterElection>()
+        //     .HasIndex(ve => new { ve.VoterPublicKey }).IsUnique();
+        //
+        // modelBuilder.Entity<VoterElection>()
+        //     .HasIndex(ve => new { ve.Signature }).IsUnique();
 
         modelBuilder.Entity<VoterElection>()
             .HasIndex(ve => new { ve.ServerSignature }).IsUnique();

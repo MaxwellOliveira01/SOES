@@ -34,6 +34,7 @@ public class ElectionsController(
             Id = election.Id,
             Name = election.Name,
             HasVoted = voterElection != null,
+            Description = election.Description,
             Options = [..election.Options.Select(o => new OptionModel {
                 Id = o.Id,
                 Name = o.Name,

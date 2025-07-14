@@ -11,6 +11,8 @@ public class Election {
     [MaxLength(200)]
     public string Name { get; set; }
     
+    public string Description { get; set; }
+    
     public List<Option> Options { get; set; }
     
     public List<VoterElection> Voters { get; set; } = [];
