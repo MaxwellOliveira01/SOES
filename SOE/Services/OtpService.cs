@@ -41,10 +41,9 @@ public class OtpService(AppDbContext appDbContext) : IOtpService {
             return false;
         }
 
-        // TODO: descomentar isso!!!
-        //if (tokenEntity.Used) {
-        //    return false;
-        //}
+        if (tokenEntity.Used) {
+            return false;
+        }
 
         tokenEntity.Used = true;
         await appDbContext.SaveChangesAsync();
