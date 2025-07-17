@@ -121,7 +121,7 @@ public class VoteService(
         var rsa = RSA.Create();
         rsa.ImportSubjectPublicKeyInfo(server.PublicKey, out _);
 
-        return rsa.VerifyData(voterElection.Signature, voterElection.ServerSignature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        return rsa.VerifyData(voterElection.Signature, voterElection.ServerSignature, HashAlgorithmName.SHA256, RSASignaturePadding.Pss);
     }
 
 }

@@ -24,11 +24,11 @@ public class ServerService() {
     }
 
     public byte[] Sign(byte[] data) {
-        return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pss);
     }
 
     public bool Verify(byte[] data, byte[] signature) {
-        return rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        return rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pss);
     }
     
 }
